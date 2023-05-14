@@ -150,4 +150,13 @@ console.log('merging optionalDependencies in', pkgJsonPath)
 fs.writeFileSync(pkgJsonPath, JSON.stringify(pkgJson, null, 2) + '\n')
 ```
 
+Or you can simply use these shell commands:
+
+```shell
+npm query "#@swc/core" | jq ".[] |= {optionalDependencies} | .[0]" > swc-core-opt-deps.json
+jq -s '.[0] * .[1]' package.json swc-core-opt-deps.json > package.json.new
+mv package.json.new package.json
+rm swc-core-opt-deps.json
+```
+
 With those optional deps specified in your project's `package.json`, the lockfile will always contain entries for those deps even using the lockfile refresh method above. Only the dep that is supported on your platform would actually be installed.
